@@ -1,0 +1,91 @@
+//
+//  PokemonDetailVC.swift
+//  Pokedex
+//
+//  Created by Chintan Vaghela on 2/18/17.
+//  Copyright © 2017 CVBuilts. All rights reserved.
+//
+
+import UIKit
+
+class PokemonDetailVC: UIViewController {
+    
+    var pokemon: Pokemon!
+
+    @IBOutlet weak var nameLbl: UILabel!
+    @IBOutlet weak var mainImg: UIImageView!
+    @IBOutlet weak var descriptionLbl: UILabel!
+    @IBOutlet weak var typeLbl: UILabel!
+    @IBOutlet weak var defenseLbl: UILabel!
+    @IBOutlet weak var heightLbl: UILabel!
+    @IBOutlet weak var pokedexLbl: UILabel!
+    @IBOutlet weak var weightLbl: UILabel!
+    @IBOutlet weak var attackLbl: UILabel!
+    @IBOutlet weak var nextEvoImg: UIImageView!
+    @IBOutlet weak var evoLbl: UILabel!
+    @IBOutlet weak var currentEvoImg: UIImageView!
+    @IBOutlet weak var segment: UISegmentedControl!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        nameLbl.text = pokemon.name.capitalized
+        
+        let img = UIImage(named: "\(pokemon.pokedexId)")
+        
+        mainImg.image = img
+        currentEvoImg.image = img
+        
+        pokedexLbl.text = "\(pokemon.pokedexId)"
+        
+        pokemon.downloadPokemonDetails { 
+            
+            // Will be called after network call is complete!
+            self.updateUI()
+        }
+    }
+    
+    func updateUI(){
+        
+        attackLbl.text = pokemon.attack
+        defenseLbl.text = pokemon.defense
+        heightLbl.text = pokemon.height
+        weightLbl.text = pokemon.weight
+        pokedexLbl.text = "\(pokemon.pokedexId)"
+        typeLbl.text = pokemon.type
+        
+        if segment.selectedSegmentIndex == 0 {
+            
+            descriptionLbl.text = pokemon.description
+            
+        } else if segment.selectedSegmentIndex == 1 {
+            
+            descriptionLbl.text = pokemon.moves
+            
+        }
+        
+        if pokemon.nextEvolutionId == "" {
+            
+            evoLbl.text = "No Evolutions!"
+            nextEvoImg.isHidden = true
+            
+        } else {
+            
+            nextEvoImg.isHidden = false
+            nextEvoImg.image = UIImage(named: pokemon.nextEvolutionId)
+            let str = "Next Evolution: \(pokemon.nextEvolutionName) - Level \(pokemon.nextEvolutionLevel)"
+            evoLbl.text = str
+            
+        }
+    }
+    
+    @IBAction func backBtnPressed(_ sender: UIButton) {
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func segmentChanged(_ sender: UISegmentedControl) {
+        
+        self.updateUI()
+    }
+}
