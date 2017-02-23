@@ -216,12 +216,25 @@ class Pokemon {
                     
                     if moves.count > 1 {
                         
-                        for x in 1..<20 {
+                        var y: Int
+                        
+                        if moves.count < 20 {
                             
+                            y = moves.count
+                        } else {
+                            
+                            y = 20
+                        }
+                        
+                        for x in 1..<y {
                             
                             if let name = moves[x]["name"] {
                                 
                                 self._moves! += " / \(name)"
+                                
+                            } else {
+                                
+                                self._moves = ""
                             }
                         }
                     }
